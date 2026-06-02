@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowRight, RefreshCw, Shield, Truck, Percent } from 'lucide-react';
 import { CategoryCard, ProductCard, MenhPill, type MenhType } from '../components/roxi-components';
@@ -6,6 +6,46 @@ import { useProducts, useCategories } from '../hooks/useProducts';
 import { useShop } from '../context/ShopContext';
 
 const U = 'https://images.unsplash.com/';
+
+const sectionTone = {
+  dark: {
+    bg: '#0F0D0A',
+    h2: '#F5F0E8',
+    sub: '#A89F8C',
+    link: '#C9A84C',
+    inputBg: '#211D18',
+    inputBorder: '#2E2820',
+    inputColor: '#F5F0E8',
+    resultBg: 'rgba(201,168,76,.08)',
+    resultBorder: 'rgba(201,168,76,.3)',
+    resultText: '#E8C97A',
+    muted: '#6B6355',
+  },
+  light: {
+    bg: '#F7F4EF',
+    h2: '#1A1612',
+    sub: '#6B6355',
+    link: '#9A7B2F',
+    inputBg: '#FFFFFF',
+    inputBorder: '#DDD5C8',
+    inputColor: '#1A1612',
+    resultBg: 'rgba(201,168,76,.14)',
+    resultBorder: 'rgba(201,168,76,.45)',
+    resultText: '#7A5C12',
+    muted: '#8A8070',
+  },
+} as const;
+
+function HomeSection({ tone, children, style, className }: { tone: 'dark' | 'light'; children: ReactNode; style?: CSSProperties; className?: string }) {
+  const t = sectionTone[tone];
+  return (
+    <section className={`home-section ${className ?? ''}`.trim()} style={{ background: t.bg, padding: '80px 0', ...style }}>
+      <div className="page-container" style={{ maxWidth: 1440, margin: '0 auto', padding: '0 32px' }}>
+        {children}
+      </div>
+    </section>
+  );
+}
 
 function Countdown() {
   const [t, setT] = useState({ h: 11, m: 47, s: 33 });
@@ -39,6 +79,8 @@ export function Homepage() {
   const { addToCart, toggleWishlist, isWishlisted } = useShop();
   const { categories } = useCategories();
   const { products: allProducts } = useProducts({ limit: '20' });
+  const light = sectionTone.light;
+  const dark = sectionTone.dark;
 
   const lookup = () => {
     const y = parseInt(year);
@@ -51,8 +93,8 @@ export function Homepage() {
   const saleProducts = allProducts.filter(p => p.salePercent);
 
   return (
-    <div style={{ background: '#0F0D0A', fontFamily: 'DM Sans,sans-serif' }}>
-      <section className="hero-section" style={{ position: 'relative', height: '90vh', minHeight: 580, overflow: 'hidden' }}>
+    <div style={{ fontFamily: 'DM Sans,sans-serif' }}>
+      <section className="hero-section" style={{ position: 'relative', height: '90vh', minHeight: 580, overflow: 'hidden', background: '#0F0D0A' }}>
         <div style={{ position: 'absolute', inset: 0 }}>
           <img src={`${U}photo-1676721681490-9690e275a62e?w=1440&h=900&fit=crop&auto=format`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: .42 }} />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(108deg,rgba(15,13,10,.96) 0%,rgba(15,13,10,.6) 55%,rgba(15,13,10,.18) 100%)' }} />
@@ -92,56 +134,56 @@ export function Homepage() {
         </div>
       </section>
 
-      <section className="page-container" style={{ padding: '80px 32px', textAlign: 'center', background: 'radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.06) 0%,transparent 70%)' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto' }}>
-          <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(26px,3vw,40px)', color: '#F5F0E8', marginBottom: 10 }}>Tìm Đá Hợp Mệnh</h2>
-          <p style={{ fontSize: 15, color: '#A89F8C', marginBottom: 30 }}>Nhập năm sinh để tìm đá phong thủy phù hợp với bạn</p>
+      <HomeSection tone="light">
+        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(26px,3vw,40px)', color: light.h2, marginBottom: 10 }}>Tìm Đá Hợp Mệnh</h2>
+          <p style={{ fontSize: 15, color: light.sub, marginBottom: 30 }}>Nhập năm sinh để tìm đá phong thủy phù hợp với bạn</p>
           <div style={{ display: 'flex', gap: 11, justifyContent: 'center', marginBottom: 22, flexWrap: 'wrap' }}>
             <input value={year} onChange={e => setYear(e.target.value)} onKeyDown={e => e.key === 'Enter' && lookup()} placeholder="Năm sinh (vd: 1990)" maxLength={4}
-              style={{ background: '#211D18', border: '1px solid #2E2820', borderRadius: 2, color: '#F5F0E8', padding: '12px 20px', fontSize: 16, outline: 'none', width: 220, textAlign: 'center', fontFamily: 'DM Sans,sans-serif' }} />
+              style={{ background: light.inputBg, border: `1px solid ${light.inputBorder}`, borderRadius: 2, color: light.inputColor, padding: '12px 20px', fontSize: 16, outline: 'none', width: 220, textAlign: 'center', fontFamily: 'DM Sans,sans-serif', boxShadow: '0 1px 3px rgba(26,22,18,.06)' }} />
             <button onClick={lookup} style={{ background: '#C9A84C', color: '#0F0D0A', border: 'none', padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', borderRadius: 2 }}>Tra Cứu</button>
           </div>
-          {result && <div style={{ background: 'rgba(201,168,76,.08)', border: '1px solid rgba(201,168,76,.3)', borderRadius: 4, padding: '14px 20px', marginBottom: 22, fontSize: 14, color: '#E8C97A' }}>✨ Năm {year} thuộc <strong>Mệnh {result}</strong></div>}
+          {result && <div style={{ background: light.resultBg, border: `1px solid ${light.resultBorder}`, borderRadius: 4, padding: '14px 20px', marginBottom: 22, fontSize: 14, color: light.resultText }}>✨ Năm {year} thuộc <strong>Mệnh {result}</strong></div>}
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
             {menhs.map(m => <MenhPill key={m} menh={m} active={activeMenh === m} onClick={() => setActiveMenh(activeMenh === m ? null : m)} />)}
           </div>
         </div>
-      </section>
+      </HomeSection>
 
-      <section className="page-container" style={{ padding: '0 32px 80px', maxWidth: 1440, margin: '0 auto' }}>
-        <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: '#F5F0E8', marginBottom: 28 }}>Danh Mục Nổi Bật</h2>
+      <HomeSection tone="dark">
+        <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: dark.h2, marginBottom: 28 }}>Danh Mục Nổi Bật</h2>
         <div className="category-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(290px,1fr))', gap: 14 }}>
           {categories.map(c => <CategoryCard key={c.slug} name={c.name} count={c.count} image={c.image} onClick={() => navigate(`/danh-muc/${c.slug}`)} />)}
         </div>
-      </section>
+      </HomeSection>
 
-      <section className="page-container" style={{ padding: '0 32px 80px', maxWidth: 1440, margin: '0 auto' }}>
+      <HomeSection tone="light">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 28 }}>
-          <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: '#F5F0E8' }}>Mới Về</h2>
-          <button onClick={() => navigate('/danh-muc')} style={{ background: 'none', border: 'none', color: '#C9A84C', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>Xem Tất Cả <ArrowRight size={13} /></button>
+          <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: light.h2 }}>Mới Về</h2>
+          <button onClick={() => navigate('/danh-muc')} style={{ background: 'none', border: 'none', color: light.link, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>Xem Tất Cả <ArrowRight size={13} /></button>
         </div>
         <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(210px,1fr))', gap: 14 }}>
           {filtered.slice(0, 8).map(p => (
-            <ProductCard key={p.id} product={p} onAddToCart={addToCart} onClick={() => navigate(`/san-pham/${p.slug}`)} wished={isWishlisted(p.id)} onToggleWish={() => toggleWishlist(p)} />
+            <ProductCard key={p.id} product={p} theme="light" onAddToCart={addToCart} onClick={() => navigate(`/san-pham/${p.slug}`)} wished={isWishlisted(p.id)} onToggleWish={() => toggleWishlist(p)} />
           ))}
         </div>
-      </section>
+      </HomeSection>
 
       {saleProducts.length > 0 && (
-        <section className="page-container" style={{ padding: '0 32px 80px', maxWidth: 1440, margin: '0 auto' }}>
+        <HomeSection tone="dark" style={{ paddingBottom: 100 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 14 }}>
             <div>
-              <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: '#F5F0E8', marginBottom: 3 }}>Đang Giảm Giá</h2>
-              <div style={{ fontSize: 11, color: '#6B6355', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Ưu đãi kết thúc trong</div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: 'clamp(22px,2.5vw,32px)', color: dark.h2, marginBottom: 3 }}>Đang Giảm Giá</h2>
+              <div style={{ fontSize: 11, color: dark.muted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Ưu đãi kết thúc trong</div>
             </div>
             <Countdown />
           </div>
           <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(210px,1fr))', gap: 14 }}>
             {saleProducts.map(p => (
-              <ProductCard key={p.id} product={p} onAddToCart={addToCart} onClick={() => navigate(`/san-pham/${p.slug}`)} wished={isWishlisted(p.id)} onToggleWish={() => toggleWishlist(p)} />
+              <ProductCard key={p.id} product={p} theme="dark" onAddToCart={addToCart} onClick={() => navigate(`/san-pham/${p.slug}`)} wished={isWishlisted(p.id)} onToggleWish={() => toggleWishlist(p)} />
             ))}
           </div>
-        </section>
+        </HomeSection>
       )}
     </div>
   );

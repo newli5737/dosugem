@@ -28,6 +28,7 @@
   .cart-item > div:nth-child(3),
   .cart-item > div:nth-child(4) { grid-column: 2; }
   .cart-item > div:nth-child(4) { display: flex; justify-content: space-between; align-items: center; text-align: left !important; }
+  .home-section { padding-top: 56px !important; padding-bottom: 56px !important; }
 }
 
 @media (max-width: 480px) {

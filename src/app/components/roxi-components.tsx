@@ -62,11 +62,13 @@ interface ProductCardProps {
   onClick?: () => void;
   wished?: boolean;
   onToggleWish?: () => void;
+  theme?: 'dark' | 'light';
 }
 
-export function ProductCard({ product, onAddToCart, onClick, wished, onToggleWish }: ProductCardProps) {
+export function ProductCard({ product, onAddToCart, onClick, wished, onToggleWish, theme = 'dark' }: ProductCardProps) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(false);
+  const light = theme === 'light';
 
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -80,9 +82,20 @@ export function ProductCard({ product, onAddToCart, onClick, wished, onToggleWis
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ background: '#211D18', border: `1px solid ${hovered ? '#C9A84C44' : '#2E2820'}`, borderRadius: 4, overflow: 'hidden', transition: 'all .2s', transform: hovered ? 'scale(1.02)' : 'scale(1)', boxShadow: hovered ? '0 0 20px rgba(201,168,76,.12)' : 'none', cursor: onClick ? 'pointer' : 'default', display: 'flex', flexDirection: 'column' }}
+      style={{
+        background: light ? '#FFFFFF' : '#211D18',
+        border: `1px solid ${hovered ? '#C9A84C44' : light ? '#E5DFD4' : '#2E2820'}`,
+        borderRadius: 4,
+        overflow: 'hidden',
+        transition: 'all .2s',
+        transform: hovered ? 'scale(1.02)' : 'scale(1)',
+        boxShadow: hovered ? (light ? '0 8px 24px rgba(26,22,18,.08)' : '0 0 20px rgba(201,168,76,.12)') : (light ? '0 1px 4px rgba(26,22,18,.06)' : 'none'),
+        cursor: onClick ? 'pointer' : 'default',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
-      <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', background: '#1A1612', flexShrink: 0 }}>
+      <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', background: light ? '#F0EBE3' : '#1A1612', flexShrink: 0 }}>
         <img src={`${product.image}?w=400&h=400&fit=crop&auto=format`} alt={product.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .3s', transform: hovered ? 'scale(1.06)' : 'scale(1)' }} />
         {product.salePercent && (
@@ -106,8 +119,8 @@ export function ProductCard({ product, onAddToCart, onClick, wished, onToggleWis
         </div>
       </div>
       <div style={{ padding: '13px 14px', display: 'flex', flexDirection: 'column', gap: 5, flex: 1 }}>
-        <div style={{ color: '#F5F0E8', fontFamily: 'DM Sans,sans-serif', fontSize: 13, fontWeight: 500, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.name}</div>
-        <div style={{ color: '#6B6355', fontSize: 11, fontFamily: 'DM Sans,sans-serif' }}>{product.spec}</div>
+        <div style={{ color: light ? '#1A1612' : '#F5F0E8', fontFamily: 'DM Sans,sans-serif', fontSize: 13, fontWeight: 500, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.name}</div>
+        <div style={{ color: light ? '#8A8070' : '#6B6355', fontSize: 11, fontFamily: 'DM Sans,sans-serif' }}>{product.spec}</div>
         {product.menh && product.menh.length > 0 && (
           <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
             {product.menh.map(m => <MenhBadge key={m} menh={m} />)}
