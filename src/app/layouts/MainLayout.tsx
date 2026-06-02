@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router';
 import { Navbar } from '../components/roxi-navbar';
 import { Footer } from '../components/roxi-footer';
 import { MobileBottomNav } from '../components/MobileBottomNav';
+import { FloatZalo } from '../components/FloatZalo';
 import { Toast } from '../components/Toast';
 import { useShop } from '../context/ShopContext';
 
@@ -17,6 +18,7 @@ export function MainLayout() {
         <Outlet />
       </main>
       {!hideFooter && <Footer />}
+      <FloatZalo />
       <MobileBottomNav />
       {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
