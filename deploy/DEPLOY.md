@@ -4,8 +4,8 @@ Phù hợp server đang dùng PM2 tại `/home` (dosubook, dosutech-api, ...).
 
 | Dịch vụ | Domain | Chi tiết |
 |---------|--------|----------|
-| Frontend | `dosugem.dosutech.site` | Nginx serve `/home/dosugem/dist` |
-| API | `api-dosugem.dosutech.site` | Nginx :80 → PM2 port **5081** |
+| Frontend | `dosugem.dosutech.site` | Nginx HTTPS → `/home/dosugem/dist` |
+| API | `api-dosugem.dosutech.site` | Nginx HTTPS → PM2 port **5081** |
 
 ---
 
@@ -60,13 +60,15 @@ cd /home/dosugem
 npm ci
 npm run db:setup
 
-# Build lần đầu (HTTP — trước certbot)
-VITE_API_URL=http://api-dosugem.dosutech.site npm run build
+# Build (HTTPS — sau khi đã có cert)
+VITE_API_URL=https://api-dosugem.dosutech.site npm run build
 ```
 
 ---
 
-## 4. Nginx — chỉ HTTP :80 trước
+## 4. Nginx — HTTP redirect + HTTPS (SSL)
+
+File config trong repo **đã có SSL** trỏ cert Let's Encrypt. Cần **đã xin cert** (mục 6) trước khi `nginx -t`.
 
 ```bash
 sudo cp /home/dosugem/deploy/nginx/dosugem.dosutech.site.conf /etc/nginx/sites-available/
@@ -79,11 +81,12 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Kiểm tra HTTP:
+Kiểm tra HTTPS:
 
 ```bash
-curl -I http://dosugem.dosutech.site
-curl http://api-dosugem.dosutech.site/api/health
+curl -I https://dosugem.dosutech.site
+curl https://api-dosugem.dosutech.site/api/health
+curl https://api-dosugem.dosutech.site/api/products
 ```
 
 ---
@@ -169,83 +172,25 @@ Cert nằm tại:
 
 > **Gia hạn:** `certbot renew` với `--manual` cần TXT lại mỗi lần — nên dùng plugin DNS (Cloudflare…) hoặc renew thủ công trước khi hết hạn 90 ngày.
 
-### Gắn SSL vào nginx (thủ công)
+### Áp nginx sau khi có cert
 
-Thêm vào **`dosugem.dosutech.site.conf`** — block redirect 80 + block 443:
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name dosugem.dosutech.site;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name dosugem.dosutech.site;
-
-    ssl_certificate     /etc/letsencrypt/live/dosugem.dosutech.site/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dosugem.dosutech.site/privkey.pem;
-
-    root /home/dosugem/dist;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-Thêm vào **`api-dosugem.site.conf`**:
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name api-dosugem.dosutech.site;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name api-dosugem.dosutech.site;
-
-    ssl_certificate     /etc/letsencrypt/live/dosugem.dosutech.site/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dosugem.dosutech.site/privkey.pem;
-
-    client_max_body_size 10m;
-
-    location / {
-        proxy_pass http://127.0.0.1:5081;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+Config SSL nằm sẵn trong `deploy/nginx/*.conf`. Copy đè lên sites-available:
 
 ```bash
+cd /home/dosugem
+git pull origin main
+sudo cp deploy/nginx/dosugem.dosutech.site.conf /etc/nginx/sites-available/
+sudo cp deploy/nginx/api-dosugem.site.conf /etc/nginx/sites-available/
 sudo nginx -t
 sudo systemctl reload nginx
+VITE_API_URL=https://api-dosugem.dosutech.site npm run build
+pm2 restart dosugem-api
 ```
 
 Gia hạn cert (cron certbot có sẵn):
 
 ```bash
 sudo certbot renew --dry-run
-```
-
-**Sau certbot — build lại frontend với HTTPS:**
-
-```bash
-cd /home/dosugem
-VITE_API_URL=https://api-dosugem.dosutech.site npm run build
-# không cần restart nginx — dist/ được serve lại tự động
-pm2 restart dosugem-api
 ```
 
 ---
@@ -283,7 +228,10 @@ git clone https://github.com/newli5737/dosugem.git dosugem
 cd dosugem && mkdir -p /home/logs/dosugem
 cp .env.example .env && nano .env
 npm ci && npm run db:setup
-VITE_API_URL=http://api-dosugem.dosutech.site npm run build
+
+sudo certbot certonly --manual --preferred-challenges dns \
+  --agree-tos --email support@dosutech.site \
+  -d dosugem.dosutech.site -d api-dosugem.dosutech.site
 
 sudo cp deploy/nginx/*.conf /etc/nginx/sites-available/
 sudo ln -sf /etc/nginx/sites-available/dosugem.dosutech.site.conf /etc/nginx/sites-enabled/
@@ -291,12 +239,5 @@ sudo ln -sf /etc/nginx/sites-available/api-dosugem.site.conf /etc/nginx/sites-en
 sudo nginx -t && sudo systemctl reload nginx
 
 pm2 start deploy/ecosystem.config.cjs && pm2 save
-
-# Xin SSL — DNS TXT thủ công:
-sudo certbot certonly --manual --preferred-challenges dns \
-  --agree-tos --email support@dosutech.site \
-  -d dosugem.dosutech.site -d api-dosugem.dosutech.site
-# → thêm TXT _acme-challenge.* trên DNS → dig kiểm tra → Enter
-# → gắn SSL nginx thủ công (mục 6)
 VITE_API_URL=https://api-dosugem.dosutech.site npm run build
 ```

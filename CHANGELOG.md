@@ -4,6 +4,14 @@ Tài liệu thay đổi thủ công. Mọi mục ghi theo thời gian triển kh
 
 ---
 
+## [1.2.1] — 2026-06-02
+
+### Deploy / Hạ tầng
+
+- Nginx config trong repo **đã gồm SSL** (`:443` + redirect `:80` → HTTPS), trỏ cert `/etc/letsencrypt/live/dosugem.dosutech.site/`.
+
+---
+
 ## [1.2.0] — 2026-06-02
 
 ### Deploy / Hạ tầng
