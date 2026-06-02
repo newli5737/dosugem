@@ -1,9 +1,10 @@
 /**
- * PM2 — DOSU Gem production
- * Port API nội bộ: 5081 (không dùng 3001)
+ * PM2 — DOSU Gem
+ * Chạy từ /home/dosugem (giống dosubook, dosutech-api, ...)
  *
- * pm2 start deploy/ecosystem.config.cjs
- * pm2 save && pm2 startup
+ *   cd /home/dosugem
+ *   pm2 start deploy/ecosystem.config.cjs
+ *   pm2 save
  */
 module.exports = {
   apps: [
@@ -12,7 +13,7 @@ module.exports = {
       script: 'server/index.ts',
       interpreter: 'node',
       interpreter_args: '--import tsx',
-      cwd: '/var/www/dosugem',
+      cwd: '/home/dosugem',
       env: {
         NODE_ENV: 'production',
         PORT: 5081,
@@ -20,8 +21,8 @@ module.exports = {
       instances: 1,
       autorestart: true,
       max_memory_restart: '512M',
-      error_file: '/var/log/dosugem/api-error.log',
-      out_file: '/var/log/dosugem/api-out.log',
+      error_file: '/home/logs/dosugem/api-error.log',
+      out_file: '/home/logs/dosugem/api-out.log',
       merge_logs: true,
       time: true,
     },
