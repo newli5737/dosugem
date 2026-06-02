@@ -31,10 +31,12 @@ export function AdminOrders() {
   const load = () => {
     if (!token) return;
     const q = filter ? `?status=${filter}` : '';
-    api.admin.get<Order[]>(`/orders${q}`, token).then(setOrders);
+    api.admin.get<Order[]>(`/orders${q}`, token)
+      .then(data => setOrders(Array.isArray(data) ? data : []))
+      .catch(() => setOrders([]));
   };
 
-  useEffect(load, [token, filter]);
+  useEffect(() => { load(); }, [token, filter]);
 
   const updateStatus = async (id: string, status: string) => {
     if (!token) return;

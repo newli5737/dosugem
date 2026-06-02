@@ -18,8 +18,8 @@ export function AdminLayout() {
   if (!token) return <Navigate to="/admin/dang-nhap" replace />;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#0F0D0A', color: '#F5F0E8', fontFamily: 'DM Sans,sans-serif' }}>
-      <aside style={{ width: 240, background: '#1A1612', borderRight: '1px solid #2E2820', padding: '24px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+    <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', background: '#0F0D0A', color: '#F5F0E8', fontFamily: 'DM Sans,sans-serif' }}>
+      <aside className="admin-sidebar" style={{ width: 240, background: '#1A1612', borderRight: '1px solid #2E2820', padding: '24px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #2E2820' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
             <Gem size={20} style={{ color: '#C9A84C' }} />
@@ -27,7 +27,7 @@ export function AdminLayout() {
           </div>
           <div style={{ fontSize: 11, color: '#6B6355' }}>CMS Quản Lý</div>
         </div>
-        <nav style={{ padding: '16px 12px', flex: 1 }}>
+        <nav className="admin-nav" style={{ padding: '16px 12px', flex: 1 }}>
           {NAV.map(({ path, icon: Icon, label, exact }) => {
             const active = exact ? location.pathname === path : location.pathname.startsWith(path);
             return (
@@ -41,7 +41,7 @@ export function AdminLayout() {
             );
           })}
         </nav>
-        <div style={{ padding: '16px 20px', borderTop: '1px solid #2E2820' }}>
+        <div className="admin-sidebar-footer" style={{ padding: '16px 20px', borderTop: '1px solid #2E2820' }}>
           <div style={{ fontSize: 12, color: '#6B6355', marginBottom: 8 }}>{admin?.name}</div>
           <button onClick={logout} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#A89F8C', cursor: 'pointer', fontSize: 13 }}>
             <LogOut size={14} /> Đăng xuất
@@ -49,7 +49,7 @@ export function AdminLayout() {
           <Link to="/" style={{ display: 'block', marginTop: 12, fontSize: 12, color: '#C9A84C', textDecoration: 'none' }}>← Về website</Link>
         </div>
       </aside>
-      <main style={{ flex: 1, padding: 32, overflow: 'auto' }}>
+      <main className="admin-main" style={{ flex: 1, padding: 32, overflow: 'auto', minWidth: 0 }}>
         <Outlet />
       </main>
     </div>

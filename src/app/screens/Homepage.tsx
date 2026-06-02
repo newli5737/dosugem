@@ -96,8 +96,8 @@ export function Homepage() {
     <div style={{ fontFamily: 'DM Sans,sans-serif' }}>
       <section className="hero-section" style={{ position: 'relative', height: '90vh', minHeight: 580, overflow: 'hidden', background: '#0F0D0A' }}>
         <div style={{ position: 'absolute', inset: 0 }}>
-          <img src={`${U}photo-1676721681490-9690e275a62e?w=1440&h=900&fit=crop&auto=format`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: .42 }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(108deg,rgba(15,13,10,.96) 0%,rgba(15,13,10,.6) 55%,rgba(15,13,10,.18) 100%)' }} />
+          <img src={`${U}photo-1676721681490-9690e275a62e?w=1440&h=900&fit=crop&auto=format`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(102deg, rgba(15,13,10,.82) 0%, rgba(15,13,10,.45) 42%, rgba(15,13,10,.12) 68%, rgba(15,13,10,.02) 100%)' }} />
         </div>
         <div className="page-container hero-content" style={{ position: 'relative', maxWidth: 1440, margin: '0 auto', padding: '0 32px', height: '100%', display: 'flex', alignItems: 'center' }}>
           <div style={{ maxWidth: 580 }}>

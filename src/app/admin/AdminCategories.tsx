@@ -13,8 +13,13 @@ export function AdminCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [form, setForm] = useState({ slug: '', name: '', image: '', sortOrder: 0 });
 
-  const load = () => token && api.admin.get<Category[]>('/categories', token).then(setCategories);
-  useEffect(load, [token]);
+  const load = () => {
+    if (!token) return;
+    api.admin.get<Category[]>('/categories', token)
+      .then(data => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => setCategories([]));
+  };
+  useEffect(() => { load(); }, [token]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,8 +67,13 @@ export function AdminCoupons() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [form, setForm] = useState({ code: '', discountPercent: 5 });
 
-  const load = () => token && api.admin.get<Coupon[]>('/coupons', token).then(setCoupons);
-  useEffect(load, [token]);
+  const load = () => {
+    if (!token) return;
+    api.admin.get<Coupon[]>('/coupons', token)
+      .then(data => setCoupons(Array.isArray(data) ? data : []))
+      .catch(() => setCoupons([]));
+  };
+  useEffect(() => { load(); }, [token]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();

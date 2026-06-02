@@ -5,8 +5,8 @@ import type { Product, MenhType } from '../api/client';
 
 export type { Product, MenhType } from '../api/client';
 
-export function formatVND(n: number) {
-  return n.toLocaleString('vi-VN') + ' đ';
+export function formatVND(n: number | string | null | undefined) {
+  return Number(n ?? 0).toLocaleString('vi-VN') + ' đ';
 }
 
 const menhCfg: Record<MenhType, { color: string; bg: string; border: string; emoji: string }> = {
