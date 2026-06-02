@@ -53,7 +53,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           ))}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+        <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0, marginLeft: 'auto' }}>
           <button onClick={() => navigate('/tim-kiem')} className="desktop-icon" style={{ background: 'none', border: 'none', color: '#A89F8C', cursor: 'pointer', padding: 4, transition: 'color .2s' }}
             onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
             onMouseLeave={e => (e.currentTarget.style.color = '#A89F8C')}>
@@ -67,7 +67,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
               <span style={{ position: 'absolute', top: -4, right: -4, background: '#C9A84C', color: '#0F0D0A', borderRadius: 999, width: 16, height: 16, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{wishlist.length}</span>
             )}
           </button>
-          <button onClick={() => navigate('/gio-hang')} style={{ background: 'none', border: 'none', color: '#A89F8C', cursor: 'pointer', padding: 4, position: 'relative', transition: 'color .2s' }}
+          <button onClick={() => navigate('/gio-hang')} className="navbar-cart-top" style={{ background: 'none', border: 'none', color: '#A89F8C', cursor: 'pointer', padding: 4, position: 'relative', transition: 'color .2s' }}
             onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
             onMouseLeave={e => (e.currentTarget.style.color = '#A89F8C')}>
             <ShoppingBag size={17} />

@@ -31,6 +31,8 @@
   .admin-table-wrap { display: none !important; }
   .admin-product-cards { display: flex !important; flex-direction: column; gap: 10px; }
   .navbar-inner { padding: 0 16px !important; gap: 12px !important; }
+  .navbar-actions { gap: 4px !important; }
+  .navbar-cart-top { display: none !important; }
   .page-container { padding-left: 16px !important; padding-right: 16px !important; }
   .desktop-icon { display: none !important; }
   .mobile-bottom-nav { display: block !important; }
