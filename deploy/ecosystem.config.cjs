@@ -11,14 +11,14 @@ module.exports = {
     {
       name: 'dosugem-api',
       script: 'server/index.ts',
-      interpreter: 'node',
-      interpreter_args: '--import tsx',
+      interpreter: './node_modules/.bin/tsx',
       cwd: '/home/dosugem',
+      exec_mode: 'fork',
+      instances: 1,
       env: {
         NODE_ENV: 'production',
         PORT: 5081,
       },
-      instances: 1,
       autorestart: true,
       max_memory_restart: '512M',
       error_file: '/home/logs/dosugem/api-error.log',
