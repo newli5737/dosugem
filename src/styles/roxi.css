@@ -1,0 +1,51 @@
+/* DOSU Gem responsive styles */
+
+@media (max-width: 1024px) {
+  .desktop-nav { display: none !important; }
+  .mobile-menu-btn { display: flex !important; }
+  .category-sidebar { display: none !important; }
+  .mobile-filter-btn { display: flex !important; }
+  .product-detail-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .cart-layout { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 768px) {
+  .navbar-inner { padding: 0 16px !important; gap: 12px !important; }
+  .page-container { padding-left: 16px !important; padding-right: 16px !important; }
+  .desktop-icon { display: none !important; }
+  .mobile-bottom-nav { display: block !important; }
+  .hero-section { min-height: 520px !important; height: auto !important; padding: 80px 0 60px !important; }
+  .hero-content { flex-direction: column !important; justify-content: center !important; text-align: center !important; }
+  .hero-float-card { display: none !important; }
+  .trust-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  .category-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .blog-grid { grid-template-columns: 1fr !important; }
+  .guarantee-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .checkout-form-grid { grid-template-columns: 1fr !important; }
+  .payment-grid { grid-template-columns: 1fr !important; }
+  .cart-item { grid-template-columns: 64px 1fr !important; gap: 12px !important; }
+  .cart-item > div:nth-child(3),
+  .cart-item > div:nth-child(4) { grid-column: 2; }
+  .cart-item > div:nth-child(4) { display: flex; justify-content: space-between; align-items: center; text-align: left !important; }
+}
+
+@media (max-width: 480px) {
+  .trust-grid { grid-template-columns: 1fr !important; }
+  .category-grid { grid-template-columns: 1fr !important; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #0F0D0A;
+  -webkit-font-smoothing: antialiased;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
