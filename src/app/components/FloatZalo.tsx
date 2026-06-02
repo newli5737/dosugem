@@ -1,11 +1,8 @@
-import { useState } from 'react';
-
 const ZALO_PHONE = '84346437915';
 const ZALO_LINK = `https://zalo.me/${ZALO_PHONE}`;
+const ZALO_ICON = '/icons/Icon_of_Zalo.svg.png';
 
 export function FloatZalo() {
-  const [iconSrc, setIconSrc] = useState('/icons/zalo.png');
-
   return (
     <a
       href={ZALO_LINK}
@@ -15,15 +12,7 @@ export function FloatZalo() {
       className="float-zalo"
       title="Tư vấn qua Zalo"
     >
-      <img
-        src={iconSrc}
-        alt="Zalo"
-        width={52}
-        height={52}
-        onError={() => {
-          if (iconSrc !== '/icons/zalo.svg') setIconSrc('/icons/zalo.svg');
-        }}
-      />
+      <img src={ZALO_ICON} alt="Zalo" width={52} height={52} />
     </a>
   );
 }
